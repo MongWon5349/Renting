@@ -192,9 +192,9 @@ const getPostWithDefaults = (post) => {
 /* 极客风格的紧凑设计 */
 .page-container {
   min-height: calc(100vh - 60px);
-  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 50%, #e9ecef 100%);
+  background: #fff;
   font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
-  color: #2c3e50;
+  color: #000;
   padding: 20px 0;
   overflow-y: auto;
 }
@@ -209,17 +209,14 @@ const getPostWithDefaults = (post) => {
   text-align: center;
   margin-bottom: 32px;
   padding: 16px 0;
-  border-bottom: 1px solid rgba(44, 62, 80, 0.1);
+  border-bottom: 1px solid #ddd;
 }
 
 .blog-title {
   font-size: 32px;
   font-weight: 700;
   margin-bottom: 8px;
-  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #000;
   letter-spacing: -0.5px;
   font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
 }
@@ -304,13 +301,13 @@ const getPostWithDefaults = (post) => {
 }
 
 .featured-post {
-  background: rgba(255, 255, 255, 0.95);
+  background: #fff;
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   transition: all 0.2s ease;
   cursor: pointer;
-  border: 1px solid rgba(192, 192, 192, 0.15);
+  border: 1px solid #ddd;
 }
 
 .featured-post:hover {
@@ -370,11 +367,10 @@ const getPostWithDefaults = (post) => {
 }
 
 .blog-post {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
+  background: #fff;
   border-radius: 8px;
   padding: 20px;
-  border: 1px solid rgba(192, 192, 192, 0.15);
+  border: 1px solid #ddd;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   transition: all 0.2s ease;
   cursor: pointer;
@@ -412,9 +408,9 @@ const getPostWithDefaults = (post) => {
 .focus-item {
   text-align: center;
   padding: 12px;
-  background: rgba(255, 255, 255, 0.5);
+  background: #fff;
   border-radius: 6px;
-  border: 1px solid rgba(192, 192, 192, 0.1);
+  border: 1px solid #ddd;
 }
 
 .focus-heading {
@@ -442,9 +438,9 @@ const getPostWithDefaults = (post) => {
 .methodology-section {
   margin-bottom: 24px;
   padding: 16px;
-  background: rgba(255, 255, 255, 0.3);
+  background: #fff;
   border-radius: 8px;
-  border: 1px solid rgba(192, 192, 192, 0.1);
+  border: 1px solid #ddd;
 }
 
 .methodology-grid {
@@ -455,9 +451,9 @@ const getPostWithDefaults = (post) => {
 
 .method-item {
   padding: 12px;
-  background: rgba(255, 255, 255, 0.6);
+  background: #fff;
   border-radius: 6px;
-  border: 1px solid rgba(192, 192, 192, 0.1);
+  border: 1px solid #ddd;
 }
 
 .method-heading {

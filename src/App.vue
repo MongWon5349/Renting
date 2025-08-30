@@ -2,13 +2,13 @@
   <div id="app">
     <nav class="navbar">
       <div class="nav-container">
-        <h1 class="nav-title">个人网站</h1>
+        <h1 class="nav-title">How to rent In China</h1>
         <ul class="nav-menu">
           <li class="nav-item">
-            <router-link to="/" class="nav-link">首页</router-link>
+            <router-link to="/" class="nav-link">Home</router-link>
           </li>
           <li class="nav-item">
-            <router-link to="/blog" class="nav-link">博客</router-link>
+            <router-link to="/blog" class="nav-link">Blog</router-link>
           </li>
         </ul>
       </div>
@@ -36,14 +36,16 @@ export default {
 body {
   font-family: 'Arial', sans-serif;
   line-height: 1.6;
-  color: #333;
+  color: #000;
+  background-color: #fff;
 }
 
 .navbar {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: #fff;
+  color: #000;
   padding: 1rem 0;
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  border-bottom: 1px solid #ddd;
 }
 
 .nav-container {
@@ -67,7 +69,7 @@ body {
 }
 
 .nav-link {
-  color: white;
+  color: #000;
   text-decoration: none;
   padding: 0.5rem 1rem;
   border-radius: 5px;
@@ -76,7 +78,7 @@ body {
 
 .nav-link:hover,
 .nav-link.router-link-active {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
 .main-content {
