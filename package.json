@@ -1,0 +1,25 @@
+{
+  "name": "personal-site",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@contentful/rich-text-html-renderer": "^16.6.10",
+    "@contentful/rich-text-types": "^16.8.5",
+    "contentful": "^10.15.1",
+    "marked": "^9.1.6",
+    "vue": "^3.3.11",
+    "vue-router": "^4.2.5"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.5.2",
+    "vite": "^4.5.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
