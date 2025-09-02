@@ -247,7 +247,7 @@ const renderedContent = computed(() => {
             <span v-if="currentPost.fields.time" class="post-date">{{ new Date(currentPost.fields.time).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) }}</span>
             <span v-if="currentPost.fields.readTime" class="read-time">{{ currentPost.fields.readTime }} read</span>
           </div>
-          <h1 class="post-title">{{ currentPost.fields.title }}</h1>
+          <h2 class="post-title">{{ currentPost.fields.title }}</h2>
           
           <!-- Author info -->
           <div class="author-info">
