@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>H1 Test</title>
+</head>
+<body>
+    <h1>Test H1 Tag</h1>
+    <div id="content"></div>
+    
+    <script>
+        // 模拟BlogPost.vue中的处理逻辑
+        const testContent = `# This is a title
+Some content
+## Another title
+#NoSpace`;
+        
+        console.log('Original content:', testContent);
+        
+        // 应用我们修复的正则表达式
+        let preprocessedContent = testContent
+            .replace(/^# /gm, '## ')  // 将 "# " 转换为 "## "
+            .replace(/^#([^#])/gm, '##$1'); // 将 "#" 后面不是 "#" 的转换为 "##"
+        
+        console.log('Processed content:', preprocessedContent);
+        
+        // 检查页面上的H1标签数量
+        const h1Count = document.querySelectorAll('h1').length;
+        console.log('H1 tags on page:', h1Count);
+        
+        document.getElementById('content').innerHTML = `
+            <h2>Original Content:</h2>
+            <pre>${testContent}</pre>
+            <h2>Processed Content:</h2>
+            <pre>${preprocessedContent}</pre>
+            <h2>H1 Tags Count:</h2>
+            <p>${h1Count}</p>
+        `;
+    </script>
+</body>
+</html>
