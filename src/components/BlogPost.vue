@@ -134,6 +134,9 @@ const renderedContent = computed(() => {
     return ''
   }
 
+  // 标题计数器，确保每个层级只出现一次
+  let headingCount = { h2: 0, h3: 0 }
+  
   // 自定义渲染器，处理包含 Markdown 的富文本内容，优化标题层级
   const options = {
     renderNode: {
@@ -143,42 +146,96 @@ const renderedContent = computed(() => {
         if (content.includes('**') || content.includes('*') || content.includes('`') || content.includes('[') || content.includes('|')) {
           // 使用 marked 解析 Markdown
           let markdownContent = marked.parse(content)
-          // 调整标题层级 - 文章内容标题从H2开始（页面已有H1文章标题，H4章节标题）
+          // 调整标题层级 - 确保每个层级只出现一次：H1文章标题，H2第一个内容标题，H3第二个内容标题，H4章节标题
+          let titleCount = { h2: 0, h3: 0, h4: 0 }
           markdownContent = markdownContent
-            .replace(/<h1(\s[^>]*)?>(.*?)<\/h1>/g, '<h2$1>$2</h2>')
-            .replace(/<h2(\s[^>]*)?>(.*?)<\/h2>/g, '<h3$1>$2</h3>')
-            .replace(/<h3(\s[^>]*)?>(.*?)<\/h3>/g, '<h3$1>$2</h3>')
-            .replace(/<h4(\s[^>]*)?>(.*?)<\/h4>/g, '<h4$1>$2</h4>')
-            .replace(/<h5(\s[^>]*)?>(.*?)<\/h5>/g, '<h5$1>$2</h5>')
-            .replace(/<h6(\s[^>]*)?>(.*?)<\/h6>/g, '<h6$1>$2</h6>')
+            .replace(/<h[1-6](\s[^>]*)?>(.*?)<\/h[1-6]>/g, (match, attrs, content) => {
+              if (titleCount.h2 === 0) {
+                titleCount.h2++
+                return `<h2${attrs || ''}>${content}</h2>`
+              } else if (titleCount.h3 === 0) {
+                titleCount.h3++
+                return `<h3${attrs || ''}>${content}</h3>`
+              } else {
+                return `<div class="content-subtitle">${content}</div>`
+              }
+            })
           return markdownContent
         }
         return `<p>${content}</p>`
       },
-      // 将原始H1-H6标签调整为H2-H6，保持文章内容标题层级（页面已有H1文章标题，H4章节标题）
+      // 将原始H1-H6标签调整，确保每个层级只出现一次：H1文章标题，H2第一个内容标题，H3第二个内容标题，H4章节标题
       [BLOCKS.HEADING_1]: (node, next) => {
         const content = next(node.content)
-        return `<h2>${content}</h2>`
+        if (headingCount.h2 === 0) {
+          headingCount.h2++
+          return `<h2>${content}</h2>`
+        } else if (headingCount.h3 === 0) {
+          headingCount.h3++
+          return `<h3>${content}</h3>`
+        } else {
+          return `<div class="content-subtitle">${content}</div>`
+        }
       },
       [BLOCKS.HEADING_2]: (node, next) => {
         const content = next(node.content)
-        return `<h3>${content}</h3>`
+        if (headingCount.h2 === 0) {
+          headingCount.h2++
+          return `<h2>${content}</h2>`
+        } else if (headingCount.h3 === 0) {
+          headingCount.h3++
+          return `<h3>${content}</h3>`
+        } else {
+          return `<div class="content-subtitle">${content}</div>`
+        }
       },
       [BLOCKS.HEADING_3]: (node, next) => {
         const content = next(node.content)
-        return `<h3>${content}</h3>`
+        if (headingCount.h2 === 0) {
+          headingCount.h2++
+          return `<h2>${content}</h2>`
+        } else if (headingCount.h3 === 0) {
+          headingCount.h3++
+          return `<h3>${content}</h3>`
+        } else {
+          return `<div class="content-subtitle">${content}</div>`
+        }
       },
       [BLOCKS.HEADING_4]: (node, next) => {
         const content = next(node.content)
-        return `<h4>${content}</h4>`
+        if (headingCount.h2 === 0) {
+          headingCount.h2++
+          return `<h2>${content}</h2>`
+        } else if (headingCount.h3 === 0) {
+          headingCount.h3++
+          return `<h3>${content}</h3>`
+        } else {
+          return `<div class="content-subtitle">${content}</div>`
+        }
       },
       [BLOCKS.HEADING_5]: (node, next) => {
         const content = next(node.content)
-        return `<h5>${content}</h5>`
+        if (headingCount.h2 === 0) {
+          headingCount.h2++
+          return `<h2>${content}</h2>`
+        } else if (headingCount.h3 === 0) {
+          headingCount.h3++
+          return `<h3>${content}</h3>`
+        } else {
+          return `<div class="content-subtitle">${content}</div>`
+        }
       },
       [BLOCKS.HEADING_6]: (node, next) => {
         const content = next(node.content)
-        return `<h6>${content}</h6>`
+        if (headingCount.h2 === 0) {
+          headingCount.h2++
+          return `<h2>${content}</h2>`
+        } else if (headingCount.h3 === 0) {
+          headingCount.h3++
+          return `<h3>${content}</h3>`
+        } else {
+          return `<div class="content-subtitle">${content}</div>`
+        }
       },
       [BLOCKS.UL_LIST]: (node, next) => {
         return `<ul>${next(node.content)}</ul>`
@@ -233,16 +290,23 @@ const renderedContent = computed(() => {
         .map(extractText)
         .join('\n\n')
       
-      // 处理 Markdown 内容，调整标题层级
+      // 处理 Markdown 内容，调整标题层级，确保每个层级只出现一次
       let processedContent = marked.parse(textContent)
-      // 统一标题转换规则：H1->H2, H2-H3->H3, H4->H4, H5-H6->H5-H6
+      let markdownHeadingCount = { h2: 0, h3: 0 }
+      
+      // 统一标题转换规则：确保每个层级只出现一次
       processedContent = processedContent
-        .replace(/<h1(\s[^>]*)?>(.*?)<\/h1>/g, '<h2$1>$2</h2>')
-        .replace(/<h2(\s[^>]*)?>(.*?)<\/h2>/g, '<h3$1>$2</h3>')
-        .replace(/<h3(\s[^>]*)?>(.*?)<\/h3>/g, '<h3$1>$2</h3>')
-        .replace(/<h4(\s[^>]*)?>(.*?)<\/h4>/g, '<h4$1>$2</h4>')
-        .replace(/<h5(\s[^>]*)?>(.*?)<\/h5>/g, '<h5$1>$2</h5>')
-        .replace(/<h6(\s[^>]*)?>(.*?)<\/h6>/g, '<h6$1>$2</h6>')
+        .replace(/<h[1-6](\s[^>]*)?>(.*?)<\/h[1-6]>/g, (match, attrs, content) => {
+          if (markdownHeadingCount.h2 === 0) {
+            markdownHeadingCount.h2++
+            return `<h2${attrs || ''}>${content}</h2>`
+          } else if (markdownHeadingCount.h3 === 0) {
+            markdownHeadingCount.h3++
+            return `<h3${attrs || ''}>${content}</h3>`
+          } else {
+            return `<div class="content-subtitle">${content}</div>`
+          }
+        })
       
       return processedContent
     }
@@ -440,6 +504,15 @@ const renderedContent = computed(() => {
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin-top: 20px;
+}
+
+.post-content :deep(.content-subtitle) {
+  font-size: 16px;
+  font-weight: 600;
+  color: #666;
+  margin: 16px 0 8px 0;
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
 }
 
 .post-content :deep(p) {
