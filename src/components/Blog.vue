@@ -123,6 +123,23 @@ const featuredPosts = computed(() => {
   return blogPosts.value.filter(post => post.fields.featured)
 })
 
+// Computed properties for categorizing posts by date
+const sep3Posts = computed(() => {
+  return blogPosts.value.filter(post => {
+    if (!post.fields.time) return false;
+    const postDate = new Date(post.fields.time);
+    return postDate.getMonth() === 8 && postDate.getDate() === 3; // September is month 8 (0-indexed)
+  });
+});
+
+const otherPosts = computed(() => {
+  return blogPosts.value.filter(post => {
+    if (!post.fields.time) return true; // Posts without date go to other posts
+    const postDate = new Date(post.fields.time);
+    return !(postDate.getMonth() === 8 && postDate.getDate() === 3);
+  });
+});
+
 const getPostWithDefaults = (post) => {
   if (!post) return {};
   
@@ -159,12 +176,37 @@ const getPostWithDefaults = (post) => {
       </div>
       
       <template v-else>
-        <!-- All articles list -->
+        <!-- Pillar Content section -->
         <section class="all-posts">
-          <h2 class="section-title">Research</h2>
+          <h2 class="section-title">Pillar Content</h2>
           <div class="blog-content">
             <article 
-              v-for="post in blogPosts" 
+              v-for="post in otherPosts" 
+              :key="post.sys.id"
+              class="blog-post"
+              @click="navigateToPost(post)"  
+            >
+              <div class="post-header">
+                <h3 class="post-title">{{ post.fields.title }}</h3>
+                <div class="post-meta">
+                  <span v-if="getPostWithDefaults(post).fields.time" class="post-date">{{ new Date(getPostWithDefaults(post).fields.time).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) }}</span>
+                  <span v-if="getPostWithDefaults(post).fields.category" class="post-category">{{ getPostWithDefaults(post).fields.category }}</span>
+                  <span v-if="getPostWithDefaults(post).fields.readTime" class="read-time">{{ getPostWithDefaults(post).fields.readTime }}</span>
+                </div>
+              </div>
+              <p class="post-excerpt">
+                {{ post.fields.excerpt }}
+              </p>
+            </article>
+          </div>
+        </section>
+        
+        <!-- Process & Legalities section -->
+        <section class="process-legalities">
+          <h2 class="section-title">Process & Legalities</h2>
+          <div class="blog-content">
+            <article 
+              v-for="post in sep3Posts" 
               :key="post.sys.id"
               class="blog-post"
               @click="navigateToPost(post)"  
@@ -357,6 +399,10 @@ const getPostWithDefaults = (post) => {
 
 /* Blog posts list */
 .all-posts {
+  margin-bottom: 32px;
+}
+
+.process-legalities {
   margin-bottom: 32px;
 }
 
