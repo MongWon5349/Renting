@@ -145,8 +145,17 @@ const renderedContent = computed(() => {
         if (content.includes('**') || content.includes('*') || content.includes('`') || content.includes('[') || content.includes('|')) {
           // 先预处理内容，将H1标记转换为H2标记，避免marked.parse生成H1
           let preprocessedContent = content
-            .replace(/^# /gm, '## ')  // 将 "# " 转换为 "## "
-            .replace(/^#([^#])/gm, '##$1') // 将 "#" 后面不是 "#" 的转换为 "##"
+            .split('\n')
+            .map(line => {
+              if (line.startsWith('# ') && !line.startsWith('## ')) {
+                return '##' + line.substring(1)
+              }
+              if (line.match(/^#[^#\s]/)) {
+                return '## ' + line.substring(1)
+              }
+              return line
+            })
+            .join('\n')
           
           // 使用 marked 解析预处理后的 Markdown
           let markdownContent = marked.parse(preprocessedContent)
@@ -154,9 +163,6 @@ const renderedContent = computed(() => {
           // 二次确保：调整任何剩余的标题层级
           markdownContent = markdownContent
             .replace(/<h1(\s[^>]*)?>(.*?)<\/h1>/g, '<h2$1>$2</h2>')
-            .replace(/<h2(\s[^>]*)?>(.*?)<\/h2>/g, '<h3$1>$2</h3>')
-            .replace(/<h3(\s[^>]*)?>(.*?)<\/h3>/g, '<h4$1>$2</h4>')
-            .replace(/<h4(\s[^>]*)?>(.*?)<\/h4>/g, '<h4$1>$2</h4>')
             .replace(/<h5(\s[^>]*)?>(.*?)<\/h5>/g, '<h4$1>$2</h4>')
             .replace(/<h6(\s[^>]*)?>(.*?)<\/h6>/g, '<h4$1>$2</h4>')
           return markdownContent
@@ -243,8 +249,17 @@ const renderedContent = computed(() => {
       
       // 预处理文本内容，将H1标记转换为H2标记
        let preprocessedTextContent = textContent
-            .replace(/^# /gm, '## ')  // 将 "# " 转换为 "## "
-            .replace(/^#([^#])/gm, '##$1') // 将 "#" 后面不是 "#" 的转换为 "##"
+            .split('\n')
+            .map(line => {
+              if (line.startsWith('# ') && !line.startsWith('## ')) {
+                return '##' + line.substring(1)
+              }
+              if (line.match(/^#[^#\s]/)) {
+                return '## ' + line.substring(1)
+              }
+              return line
+            })
+            .join('\n')
       
       // 处理 Markdown 内容，调整标题层级为语义化层级：H1文章标题，H2主要章节，H3子章节，H4小节
       let processedContent = marked.parse(preprocessedTextContent)
@@ -252,9 +267,6 @@ const renderedContent = computed(() => {
       // 统一标题转换规则：保持语义化层级
       processedContent = processedContent
         .replace(/<h1(\s[^>]*)?>(.*?)<\/h1>/g, '<h2$1>$2</h2>')
-        .replace(/<h2(\s[^>]*)?>(.*?)<\/h2>/g, '<h3$1>$2</h3>')
-        .replace(/<h3(\s[^>]*)?>(.*?)<\/h3>/g, '<h4$1>$2</h4>')
-        .replace(/<h4(\s[^>]*)?>(.*?)<\/h4>/g, '<h4$1>$2</h4>')
         .replace(/<h5(\s[^>]*)?>(.*?)<\/h5>/g, '<h4$1>$2</h4>')
         .replace(/<h6(\s[^>]*)?>(.*?)<\/h6>/g, '<h4$1>$2</h4>')
       
