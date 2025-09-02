@@ -145,13 +145,12 @@ const renderedContent = computed(() => {
           let markdownContent = marked.parse(content)
           // 调整标题层级 - 文章内容标题从H2开始（页面已有H1文章标题，H4章节标题）
           markdownContent = markdownContent
-            .replace(/<h1(\s[^>]*)?>([\\s\S]*?)<\/h1>/g, '<h2$1>$2</h2>')
-            .replace(/<h2(\s[^>]*)?>([\\s\S]*?)<\/h2>/g, '<h3$1>$2</h3>')
-            .replace(/<h3(\s[^>]*)?>([\\s\S]*?)<\/h3>/g, '<h3$1>$2</h3>')
-            .replace(/<h4(\s[^>]*)?>([\\s\S]*?)<\/h4>/g, '<h4$1>$2</h4>')
-            .replace(/<h5(\s[^>]*)?>([\\s\S]*?)<\/h5>/g, '<h5$1>$2</h5>')
-            .replace(/<h6(\s[^>]*)?>([\\s\S]*?)<\/h6>/g, '<h6$1>$2</h6>')
-            .replace(/<h6(\s[^>]*)?>([\\s\S]*?)<\/h6>/g, '<h6$1>$2</h6>')
+            .replace(/<h1(\s[^>]*)?>(.*?)<\/h1>/g, '<h2$1>$2</h2>')
+            .replace(/<h2(\s[^>]*)?>(.*?)<\/h2>/g, '<h3$1>$2</h3>')
+            .replace(/<h3(\s[^>]*)?>(.*?)<\/h3>/g, '<h3$1>$2</h3>')
+            .replace(/<h4(\s[^>]*)?>(.*?)<\/h4>/g, '<h4$1>$2</h4>')
+            .replace(/<h5(\s[^>]*)?>(.*?)<\/h5>/g, '<h5$1>$2</h5>')
+            .replace(/<h6(\s[^>]*)?>(.*?)<\/h6>/g, '<h6$1>$2</h6>')
           return markdownContent
         }
         return `<p>${content}</p>`
@@ -238,13 +237,12 @@ const renderedContent = computed(() => {
       let processedContent = marked.parse(textContent)
       // 统一标题转换规则：H1->H2, H2-H3->H3, H4->H4, H5-H6->H5-H6
       processedContent = processedContent
-        .replace(/<h1(\s[^>]*)?>([\\s\S]*?)<\/h1>/g, '<h2$1>$2</h2>')
-        .replace(/<h2(\s[^>]*)?>([\\s\S]*?)<\/h2>/g, '<h3$1>$2</h3>')
-        .replace(/<h3(\s[^>]*)?>([\\s\S]*?)<\/h3>/g, '<h3$1>$2</h3>')
-        .replace(/<h4(\s[^>]*)?>([\\s\S]*?)<\/h4>/g, '<h4$1>$2</h4>')
-        .replace(/<h5(\s[^>]*)?>([\\s\S]*?)<\/h5>/g, '<h5$1>$2</h5>')
-        .replace(/<h6(\s[^>]*)?>([\\s\S]*?)<\/h6>/g, '<h6$1>$2</h6>')
-        .replace(/<h6(\s[^>]*)?>([\s\S]*?)<\/h6>/g, '<h6$1>$2</h6>')
+        .replace(/<h1(\s[^>]*)?>(.*?)<\/h1>/g, '<h2$1>$2</h2>')
+        .replace(/<h2(\s[^>]*)?>(.*?)<\/h2>/g, '<h3$1>$2</h3>')
+        .replace(/<h3(\s[^>]*)?>(.*?)<\/h3>/g, '<h3$1>$2</h3>')
+        .replace(/<h4(\s[^>]*)?>(.*?)<\/h4>/g, '<h4$1>$2</h4>')
+        .replace(/<h5(\s[^>]*)?>(.*?)<\/h5>/g, '<h5$1>$2</h5>')
+        .replace(/<h6(\s[^>]*)?>(.*?)<\/h6>/g, '<h6$1>$2</h6>')
       
       return processedContent
     }
