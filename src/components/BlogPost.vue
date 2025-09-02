@@ -134,7 +134,7 @@ const renderedContent = computed(() => {
     return ''
   }
 
-  // 自定义渲染器，处理包含 Markdown 的富文本内容
+  // 自定义渲染器，处理包含 Markdown 的富文本内容，优化标题层级
   const options = {
     renderNode: {
       [BLOCKS.PARAGRAPH]: (node, next) => {
@@ -142,21 +142,31 @@ const renderedContent = computed(() => {
         // 检查段落内容是否包含 Markdown 语法
         if (content.includes('**') || content.includes('*') || content.includes('`') || content.includes('[') || content.includes('|')) {
           // 使用 marked 解析 Markdown
-          return marked.parse(content)
+          let markdownContent = marked.parse(content)
+          // 调整标题层级
+          markdownContent = markdownContent
+            .replace(/<h1/g, '<h2')
+            .replace(/<\/h1>/g, '</h2>')
+            .replace(/<h2/g, '<h3')
+            .replace(/<\/h2>/g, '</h3>')
+            .replace(/<h3/g, '<h4')
+            .replace(/<\/h3>/g, '</h4>')
+          return markdownContent
         }
         return `<p>${content}</p>`
       },
+      // 将原始H1-H6标签向下调整一级，确保文章标题为唯一H1
       [BLOCKS.HEADING_1]: (node, next) => {
-        const content = next(node.content)
-        return `<h1>${content}</h1>`
-      },
-      [BLOCKS.HEADING_2]: (node, next) => {
         const content = next(node.content)
         return `<h2>${content}</h2>`
       },
-      [BLOCKS.HEADING_3]: (node, next) => {
+      [BLOCKS.HEADING_2]: (node, next) => {
         const content = next(node.content)
         return `<h3>${content}</h3>`
+      },
+      [BLOCKS.HEADING_3]: (node, next) => {
+        const content = next(node.content)
+        return `<h4>${content}</h4>`
       },
       [BLOCKS.UL_LIST]: (node, next) => {
         return `<ul>${next(node.content)}</ul>`
@@ -211,7 +221,18 @@ const renderedContent = computed(() => {
         .map(extractText)
         .join('\n\n')
       
-      return marked.parse(textContent)
+      // 处理 Markdown 内容，调整标题层级
+      let processedContent = marked.parse(textContent)
+      // 将 H1 转换为 H2，H2 转换为 H3，以此类推
+      processedContent = processedContent
+        .replace(/<h1/g, '<h2')
+        .replace(/<\/h1>/g, '</h2>')
+        .replace(/<h2/g, '<h3')
+        .replace(/<\/h2>/g, '</h3>')
+        .replace(/<h3/g, '<h4')
+        .replace(/<\/h3>/g, '</h4>')
+      
+      return processedContent
     }
     return '<p>内容渲染失败</p>'
   }
@@ -247,7 +268,7 @@ const renderedContent = computed(() => {
             <span v-if="currentPost.fields.time" class="post-date">{{ new Date(currentPost.fields.time).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) }}</span>
             <span v-if="currentPost.fields.readTime" class="read-time">{{ currentPost.fields.readTime }} read</span>
           </div>
-          <h2 class="post-title">{{ currentPost.fields.title }}</h2>
+          <h1 class="post-title">{{ currentPost.fields.title }}</h1>
           
           <!-- Author info -->
           <div class="author-info">
@@ -367,17 +388,42 @@ const renderedContent = computed(() => {
   margin-bottom: 40px;
 }
 
-/* Markdown 内容样式 */
-.post-content :deep(h1),
+/* Markdown 内容样式 - 优化标题层级 */
 .post-content :deep(h2),
-.post-content :deep(h3) {
+.post-content :deep(h3),
+.post-content :deep(h4),
+.post-content :deep(h5),
+.post-content :deep(h6) {
   margin: 24px 0 16px;
   font-weight: 600;
+  line-height: 1.3;
 }
 
-.post-content :deep(h1) { font-size: 28px; }
-.post-content :deep(h2) { font-size: 24px; }
-.post-content :deep(h3) { font-size: 20px; }
+/* 文章内容中的标题层级 - 从H2开始 */
+.post-content :deep(h2) { 
+  font-size: 24px; 
+  color: #2c3e50;
+  border-bottom: 2px solid #ecf0f1;
+  padding-bottom: 8px;
+}
+.post-content :deep(h3) { 
+  font-size: 20px; 
+  color: #34495e;
+}
+.post-content :deep(h4) { 
+  font-size: 18px; 
+  color: #34495e;
+}
+.post-content :deep(h5) { 
+  font-size: 16px; 
+  color: #5a6c7d;
+}
+.post-content :deep(h6) { 
+  font-size: 14px; 
+  color: #5a6c7d;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
 
 .post-content :deep(p) {
   margin-bottom: 16px;
