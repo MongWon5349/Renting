@@ -143,28 +143,42 @@ const renderedContent = computed(() => {
         if (content.includes('**') || content.includes('*') || content.includes('`') || content.includes('[') || content.includes('|')) {
           // 使用 marked 解析 Markdown
           let markdownContent = marked.parse(content)
-          // 调整标题层级 - 文章内容标题从H2开始
+          // 调整标题层级 - 文章内容标题从H3开始（页面已有H1文章标题，H2章节标题）
           markdownContent = markdownContent
-            .replace(/<h1/g, '<h2')
-            .replace(/<\/h1>/g, '</h2>')
-            .replace(/<h2/g, '<h3')
-            .replace(/<\/h2>/g, '</h3>')
+            .replace(/<h1(\s[^>]*)?>([\s\S]*?)<\/h1>/g, '<h3$1>$2</h3>')
+            .replace(/<h2(\s[^>]*)?>([\s\S]*?)<\/h2>/g, '<h4$1>$2</h4>')
+            .replace(/<h3(\s[^>]*)?>([\s\S]*?)<\/h3>/g, '<h4$1>$2</h4>')
+            .replace(/<h4(\s[^>]*)?>([\s\S]*?)<\/h4>/g, '<h5$1>$2</h5>')
+            .replace(/<h5(\s[^>]*)?>([\s\S]*?)<\/h5>/g, '<h6$1>$2</h6>')
+            .replace(/<h6(\s[^>]*)?>([\s\S]*?)<\/h6>/g, '<h6$1>$2</h6>')
           return markdownContent
         }
         return `<p>${content}</p>`
       },
-      // 将原始H1-H3标签调整为H2-H3，保持文章内容标题层级
+      // 将原始H1-H6标签调整为H3-H6，保持文章内容标题层级（页面已有H1文章标题，H2章节标题）
       [BLOCKS.HEADING_1]: (node, next) => {
         const content = next(node.content)
-        return `<h2>${content}</h2>`
+        return `<h3>${content}</h3>`
       },
       [BLOCKS.HEADING_2]: (node, next) => {
         const content = next(node.content)
-        return `<h3>${content}</h3>`
+        return `<h4>${content}</h4>`
       },
       [BLOCKS.HEADING_3]: (node, next) => {
         const content = next(node.content)
-        return `<h3>${content}</h3>`
+        return `<h4>${content}</h4>`
+      },
+      [BLOCKS.HEADING_4]: (node, next) => {
+        const content = next(node.content)
+        return `<h5>${content}</h5>`
+      },
+      [BLOCKS.HEADING_5]: (node, next) => {
+        const content = next(node.content)
+        return `<h6>${content}</h6>`
+      },
+      [BLOCKS.HEADING_6]: (node, next) => {
+        const content = next(node.content)
+        return `<h6>${content}</h6>`
       },
       [BLOCKS.UL_LIST]: (node, next) => {
         return `<ul>${next(node.content)}</ul>`
@@ -221,14 +235,14 @@ const renderedContent = computed(() => {
       
       // 处理 Markdown 内容，调整标题层级
       let processedContent = marked.parse(textContent)
-      // 将 H1 转换为 H2，H2 转换为 H3，以此类推
+      // 统一标题转换规则：H1->H3, H2-H3->H4, H4->H5, H5-H6->H6
       processedContent = processedContent
-        .replace(/<h1/g, '<h2')
-        .replace(/<\/h1>/g, '</h2>')
-        .replace(/<h2/g, '<h3')
-        .replace(/<\/h2>/g, '</h3>')
-        .replace(/<h3/g, '<h4')
-        .replace(/<\/h3>/g, '</h4>')
+        .replace(/<h1(\s[^>]*)?>([\s\S]*?)<\/h1>/g, '<h3$1>$2</h3>')
+        .replace(/<h2(\s[^>]*)?>([\s\S]*?)<\/h2>/g, '<h4$1>$2</h4>')
+        .replace(/<h3(\s[^>]*)?>([\s\S]*?)<\/h3>/g, '<h4$1>$2</h4>')
+        .replace(/<h4(\s[^>]*)?>([\s\S]*?)<\/h4>/g, '<h5$1>$2</h5>')
+        .replace(/<h5(\s[^>]*)?>([\s\S]*?)<\/h5>/g, '<h6$1>$2</h6>')
+        .replace(/<h6(\s[^>]*)?>([\s\S]*?)<\/h6>/g, '<h6$1>$2</h6>')
       
       return processedContent
     }
@@ -397,30 +411,30 @@ const renderedContent = computed(() => {
   line-height: 1.3;
 }
 
-/* 文章内容中的标题层级 - 从H2开始 */
-.post-content :deep(h2) { 
-  font-size: 24px; 
+/* 文章内容中的标题层级 - 从H3开始（页面已有H1文章标题，H2章节标题） */
+.post-content :deep(h3) { 
+  font-size: 22px; 
   color: #2c3e50;
   border-bottom: 2px solid #ecf0f1;
   padding-bottom: 8px;
-}
-.post-content :deep(h3) { 
-  font-size: 20px; 
-  color: #34495e;
+  margin-top: 32px;
 }
 .post-content :deep(h4) { 
   font-size: 18px; 
   color: #34495e;
+  margin-top: 28px;
 }
 .post-content :deep(h5) { 
   font-size: 16px; 
   color: #5a6c7d;
+  margin-top: 24px;
 }
 .post-content :deep(h6) { 
   font-size: 14px; 
   color: #5a6c7d;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  margin-top: 20px;
 }
 
 .post-content :deep(p) {
