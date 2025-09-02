@@ -170,7 +170,7 @@ const getPostWithDefaults = (post) => {
               @click="navigateToPost(post)"  
             >
               <div class="post-header">
-                <h2 class="post-title">{{ post.fields.title }}</h2>
+                <h3 class="post-title">{{ post.fields.title }}</h3>
                 <div class="post-meta">
                   <span v-if="getPostWithDefaults(post).fields.time" class="post-date">{{ new Date(getPostWithDefaults(post).fields.time).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) }}</span>
                   <span v-if="getPostWithDefaults(post).fields.category" class="post-category">{{ getPostWithDefaults(post).fields.category }}</span>

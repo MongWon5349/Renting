@@ -143,30 +143,30 @@ const renderedContent = computed(() => {
         if (content.includes('**') || content.includes('*') || content.includes('`') || content.includes('[') || content.includes('|')) {
           // 使用 marked 解析 Markdown
           let markdownContent = marked.parse(content)
-          // 调整标题层级
+          // 调整标题层级 - 文章内容标题从H4开始
           markdownContent = markdownContent
-            .replace(/<h1/g, '<h2')
-            .replace(/<\/h1>/g, '</h2>')
-            .replace(/<h2/g, '<h3')
-            .replace(/<\/h2>/g, '</h3>')
-            .replace(/<h3/g, '<h4')
-            .replace(/<\/h3>/g, '</h4>')
+            .replace(/<h1/g, '<h4')
+            .replace(/<\/h1>/g, '</h4>')
+            .replace(/<h2/g, '<h5')
+            .replace(/<\/h2>/g, '</h5>')
+            .replace(/<h3/g, '<h6')
+            .replace(/<\/h3>/g, '</h6>')
           return markdownContent
         }
         return `<p>${content}</p>`
       },
-      // 将原始H1-H6标签向下调整一级，确保文章标题为唯一H1
+      // 将原始H1-H6标签调整为H4-H6，确保页面只有一个H1、H2、H3
       [BLOCKS.HEADING_1]: (node, next) => {
         const content = next(node.content)
-        return `<h2>${content}</h2>`
+        return `<h4>${content}</h4>`
       },
       [BLOCKS.HEADING_2]: (node, next) => {
         const content = next(node.content)
-        return `<h3>${content}</h3>`
+        return `<h5>${content}</h5>`
       },
       [BLOCKS.HEADING_3]: (node, next) => {
         const content = next(node.content)
-        return `<h4>${content}</h4>`
+        return `<h6>${content}</h6>`
       },
       [BLOCKS.UL_LIST]: (node, next) => {
         return `<ul>${next(node.content)}</ul>`
@@ -399,7 +399,7 @@ const renderedContent = computed(() => {
   line-height: 1.3;
 }
 
-/* 文章内容中的标题层级 - 从H2开始 */
+/* 文章内容中的标题层级 - 从H4开始，确保页面只有一个H1、H2、H3 */
 .post-content :deep(h2) { 
   font-size: 24px; 
   color: #2c3e50;
