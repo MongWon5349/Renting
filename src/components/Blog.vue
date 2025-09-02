@@ -142,8 +142,8 @@ const getPostWithDefaults = (post) => {
   <div class="page-container">
     <div class="blog-container">
       <header class="blog-header">
-        <h1 class="blog-title">SEO Research Institute</h1>
-        <p class="blog-subtitle">Advanced research • Technical insights • Programmatic solutions</p>
+        <h1 class="blog-title">Global Rental Housing Research Institute</h1>
+        <p class="blog-subtitle">Advanced Research • Legal Notices • Programmatic Solutions</p>
       </header>
       
       <!-- Loading state -->
