@@ -124,11 +124,13 @@ const featuredPosts = computed(() => {
 })
 
 // Computed properties for categorizing posts by date
-const sep3Posts = computed(() => {
+const processLegalitiesPosts = computed(() => {
   return blogPosts.value.filter(post => {
     if (!post.fields.time) return false;
     const postDate = new Date(post.fields.time);
-    return postDate.getMonth() === 8 && postDate.getDate() === 3; // September is month 8 (0-indexed)
+    const targetDate = new Date(2025, 8, 2); // September 2, 2025 (month 8 is September, 0-indexed)
+    // Check if date is after September 2, 2025
+    return postDate > targetDate;
   });
 });
 
@@ -136,7 +138,9 @@ const otherPosts = computed(() => {
   return blogPosts.value.filter(post => {
     if (!post.fields.time) return true; // Posts without date go to other posts
     const postDate = new Date(post.fields.time);
-    return !(postDate.getMonth() === 8 && postDate.getDate() === 3);
+    const targetDate = new Date(2025, 8, 2); // September 2, 2025
+    // Include posts on or before September 2, 2025
+    return postDate <= targetDate;
   });
 });
 
@@ -206,7 +210,7 @@ const getPostWithDefaults = (post) => {
           <h2 class="section-title">Process & Legalities</h2>
           <div class="blog-content">
             <article 
-              v-for="post in sep3Posts" 
+              v-for="post in processLegalitiesPosts" 
               :key="post.sys.id"
               class="blog-post"
               @click="navigateToPost(post)"  
